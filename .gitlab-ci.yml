@@ -1,0 +1,21 @@
+---
+stages:
+  - build
+  - test
+  - deploy
+
+
+build:
+  stage: build
+  script:
+    - echo "Building docker image into docker hub registry"
+
+test:
+  stage: test
+  script:
+    - echo "Testing fastapi web application, unittests and integrations"
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploy fastapi application on AWS, Gitllab, and GCS registry"
