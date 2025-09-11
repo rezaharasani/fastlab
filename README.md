@@ -1,3 +1,7 @@
+[![pipeline status](https://gitlab.com/harasani-gitops/fastlab/badges/main/pipeline.svg)](https://gitlab.com/harasani-gitops/fastlab/-/commits/main)
+[![coverage report](https://gitlab.com/harasani-gitops/fastlab/badges/main/coverage.svg)](https://gitlab.com/harasani-gitops/fastlab/-/commits/main)
+[![Latest Release](https://gitlab.com/harasani-gitops/fastlab/-/badges/release.svg)](https://gitlab.com/harasani-gitops/fastlab/-/releases)
+
 # fastlab (FastAPI GitLab Sample Project)
 
 

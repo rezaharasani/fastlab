@@ -1,4 +1,11 @@
 ---
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+    - when: never
+
+
 stages:
   - build
   - test
@@ -8,8 +15,7 @@ stages:
 .test_template:
   image: python:3.11.7-slim
   stage: test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+  dependencies: []
   before_script:
     - echo "Installing requirements ..."
     - pip install --upgrade pip
@@ -22,6 +28,7 @@ stages:
 
 build:
   stage: build
+  dependencies: []
   script:
     - echo "Building docker image into docker hub registry"
 
@@ -36,22 +43,31 @@ unit_tests:
   extends: .test_template
   script:
     - echo "Running unittests ..."
-    - pytest -v --disable-warnings
+    - pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
 
 test_coverage:
   extends: .test_template
   script:
-    - pytest --cov=./ --cov-report=xml
+    - pytest --cov=app --cov-report=xml
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+    expire_in: 1 week
 
 
 deploy_on_local:
   stage: deploy
+  rules:
+    - if: "$CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH"
+  dependencies: []
   script:
     - echo "Deploy fastapi application on AWS, Gitllab, and GCS registry"
 
@@ -59,8 +75,9 @@ deploy_on_local:
 deploy_on_main:
   stage: deploy
   rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - if: "$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH"
   environment:
     name: production
+  dependencies: []
   script:
     - echo "Deploy fastapi application from the $CI_COMMIT_REF_NAME brach. I hope everything will happen in its best way"
