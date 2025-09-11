@@ -1,7 +1,9 @@
+---
 name: CI/CD Pipeline
 on:
   push:
-    branches: [ "*" ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -49,15 +51,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Install curl command
+        run: apt install curl -y
       - name: Install Render CLI
+        run: >
+             curl -L
+             https://github.com/render-oss/cli/releases/download/v1.1.0/
+             cli_2.1.5_linux_amd64.zip -o render-cli.zip
+      - name: Unzip and move Render CLI
         run: |
-          apt install curl -y
-          curl -L https://github.com/render-oss/cli/releases/download/v1.1.0/cli_2.1.5_linux_amd64.zip -o render.zip
-          unzip render.zip
-          sudo mv cli_v2.1.5 /usr/local/bin/render
+             unzip render.zip
+             sudo mv cli_v2.1.5 /usr/local/bin/render
       - name: Trigger deploy with Render CLI
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           CI: true
-        run: |
-          render deploys create ${{ secrets.RENDER_PROD_SERVICE_ID }} --output json --confirm
+        run: >
+             render deploys create
+             ${{ vars.RENDER_PROD_SERVICE_ID }} --output json --confirm
