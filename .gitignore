@@ -1,0 +1,8 @@
+fastapi-cicd/
+.idea/
+app/__pycache__/
+.pytest_cache
+.DS_Store
+htmlcov
+coverage.xml
+.coverage

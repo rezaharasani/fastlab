@@ -1,0 +1,10 @@
+fastapi-cicd
+.gitignore
+.idea
+.pytest_cache
+README.md
+.gitlab-ci.yml
+.DS_Store
+htmlcov
+coverage.xml
+.coverage
