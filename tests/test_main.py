@@ -13,7 +13,7 @@ def test_root():
 
 
 def test_health():
-    """Test healthcheck function. It is so important for 
+    """Test healthcheck function. It is so important for
        being successful running.
     """
     response = client.get("/health")
