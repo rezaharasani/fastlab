@@ -60,7 +60,7 @@ jobs:
 
       - name: Unzip and move Render CLI
         run: |
-             unzip render.zip
+             unzip -o render.zip
              sudo mv cli_v2.1.5 /usr/local/bin/render
 
       - name: Trigger deploy with Render CLI
