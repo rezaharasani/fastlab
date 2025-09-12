@@ -53,23 +53,20 @@ jobs:
     needs: test
     steps:
       - name: Install Render CLI
-        run: >
-             URL=https://github.com
-             PATH=render-oss/cli/releases/download/v2.1.5
-             FILE=cli_2.1.5_linux_amd64.zip
-             DOWNLOAD_LINK="$URL/$PATH/$FILE"
-             echo $DOWNLOAD_LINK
-             curl -L $DOWNLOAD_LINK -o render-cli.zip
-      
+        run: |
+             curl -L https://github.com/render-oss/cli/releases/download/v2.1.5/cli_2.1.5_linux_amd64.zip -o render.zip
+             unzip render.zip
+             sudo mv cli_v2.1.5 /usr/local/bin/render
+
       - name: Unzip and move Render CLI
         run: |
              unzip render.zip
              sudo mv cli_v2.1.5 /usr/local/bin/render
-      
+
       - name: Trigger deploy with Render CLI
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           CI: true
         run: |
              SVC_PROD_ID=${{ secrets.RENDER_PROD_SERVICE_ID }}
-             render deploys create $SVC_PROD_ID --output json --confirm 
+             render deploys create $SVC_PROD_ID --output json --confirm
