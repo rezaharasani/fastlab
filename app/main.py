@@ -6,7 +6,7 @@ app = FastAPI()
 @app.get("/", status_code=status.HTTP_200_OK)
 async def root():
     """Represents a hello message to users."""
-    return {"message": "Hello World"}
+    return {"message": "Welcome to deployment with CI/CD pipeline"}
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)

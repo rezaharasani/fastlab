@@ -6,3 +6,4 @@ app/__pycache__/
 htmlcov
 coverage.xml
 .coverage
+tests/__pycache__/

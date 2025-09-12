@@ -9,7 +9,7 @@ def test_root():
     """Test root function"""
     response = client.get("/")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == {"message": "Hello World"}
+    assert response.json() == {"message": "Welcome to deployment with CI/CD pipeline"}
 
 
 def test_health():
