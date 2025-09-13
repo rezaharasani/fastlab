@@ -45,4 +45,4 @@ jobs:
     needs: test
     steps:
       - name: Trigger deploy with Render CLI
-        run: https://api.render.com/deploy/${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl https://api.render.com/deploy/${{ secrets.RENDER_DEPLOY_HOOK }}
