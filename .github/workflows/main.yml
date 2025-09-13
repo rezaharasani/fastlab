@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -43,6 +46,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: test
+    env:
+      RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
     steps:
       - name: Trigger deploy with Render CLI
-        run: curl https://api.render.com/deploy/${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl https://api.render.com/deploy/${{ env.RENDER_HOOK }}
