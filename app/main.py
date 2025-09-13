@@ -1,6 +1,10 @@
 from fastapi import FastAPI, status
 
-app = FastAPI(version="github-v0.1.1", title="Github API", description="Github API")
+app = FastAPI(
+    version="github-v0.1.1",
+    title="Github API",
+    description="Github API"
+)
 
 
 @app.get("/", status_code=status.HTTP_200_OK)
