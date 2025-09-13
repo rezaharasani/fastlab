@@ -30,16 +30,14 @@ jobs:
       -
         name: Print docker images
         run: docker image ls
-
-#
-#
-#        name: Run unittests inside Docker
-#        run: |
-#          docker run --rm harasani/fastlab:ci pytest tests/ -v
-#      -
-#        name: Lint with flake8
-#        run: |
-#          docker run --rm harasani/fastlab:ci flake8 app tests
+      -
+        name: Run unittests inside Docker
+        run: |
+          docker run --rm harasani/fastlab:ci pytest tests/ -v
+      -
+        name: Lint with flake8
+        run: |
+          docker run --rm harasani/fastlab:ci flake8 app tests
 #
 #  deploy:
 #    needs: build-and-test
