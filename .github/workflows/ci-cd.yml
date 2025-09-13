@@ -26,7 +26,7 @@ jobs:
           file: ./Dockerfile
           load: true
           tags:
-            - ${{ vars.REGISTRY_IMAGE }}:ci
+            ${{ vars.REGISTRY_IMAGE }}:ci
       -
         name: Print docker images
         run: docker image ls
