@@ -1,0 +1,72 @@
+---
+name: CI/CD (Continuous Integration/Continuous Deployment) Pipeline
+on:
+  push:
+    branches: ["**"]
+    tags: ["github-v*.*.*"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v4
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build Docker image (CI)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: harasani/fastlab:ci
+      -
+        name: Run unittests inside Docker
+        run: |
+          docker run --rm harasani/fastlab:ci pytest tests/ -v
+      -
+        name: Lint with flake8
+        run: |
+          docker run --rm harasani/fastlab:ci flake8 app tests
+
+  deploy:
+    needs: build-and-test
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/github-v')
+    runs-on: ubuntu-latest
+    env:
+      RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v4
+      -
+        name: Set up QEMU (multi-platform)
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push a multi-platform Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ vars.REGISTRY_IMAGE }}:github-v${{ github.ref_name }}
+            ${{ vars.REGISTRY_IMAGE }}:github-latest
+      -
+        name: Trigger deploy with Render CLI
+        run: curl https://api.render.com/deploy/${{ env.RENDER_HOOK }}

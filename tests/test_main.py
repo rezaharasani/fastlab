@@ -15,7 +15,7 @@ def test_root():
 
 def test_health():
     """Test healthcheck function. It is so important for
-       being successful running.
+    being successful running.
     """
     response = client.get("/health")
     assert response.status_code == status.HTTP_200_OK
