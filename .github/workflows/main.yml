@@ -9,20 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up QEMU
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
@@ -37,35 +33,16 @@ jobs:
     container:
       image: ${{ vars.REGISTRY_IMAGE }}:github-${{ github.sha }}
     steps:
-      -
-        name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-      -
-        name: Run tests
+      - name: Run tests
         run: pytest -v --disable-warnings tests/
-      -
-        name: Lint with flake8
+      - name: Lint with flake8
         run: flake8 app tests
 
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: test
-#    steps:
-#      - name: Install Render CLI
-#        run: |
-#             curl -L https://github.com/render-oss/cli/releases/download/v2.1.5/cli_2.1.5_linux_amd64.zip -o render.zip
-#             unzip render.zip
-#             sudo mv cli_v2.1.5 /usr/local/bin/render
-#
-#      - name: Unzip and move Render CLI
-#        run: |
-#             unzip -o render.zip
-#             sudo mv cli_v2.1.5 /usr/local/bin/render
-#
-#      - name: Trigger deploy with Render CLI
-#        env:
-#          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-#          CI: true
-#        run: |
-#             SVC_PROD_ID=${{ secrets.RENDER_PROD_SERVICE_ID }}
-#             render deploys create $SVC_PROD_ID --output json --confirm
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Trigger deploy with Render CLI
+        run: https://api.render.com/deploy/${{ secrets.RENDER_DEPLOY_HOOK }}
