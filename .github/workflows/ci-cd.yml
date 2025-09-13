@@ -7,33 +7,32 @@ on:
   pull_request:
     branches: ["**"]
 
+
 jobs:
-  variable_test:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Test some variables
-        run: echo ${{ vars.REGISTRY_IMAGE }}
+      -
+        name: Checkout code
+        uses: actions/checkout@v4
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build Docker image (CI)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags:
+            - ${{ vars.REGISTRY_IMAGE }}:ci
+      -
+        name: Print docker images
+        run: docker image ls
 
-
-#jobs:
-#  build-and-test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      -
-#        name: Checkout code
-#        uses: actions/checkout@v4
-#      -
-#        name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#      -
-#        name: Build Docker image (CI)
-#        uses: docker/build-push-action@v6
-#        with:
-#          context: .
-#          file: ./Dockerfile
-#          load: true
-#          tags: harasani/fastlab:ci
-#      -
+#
+#
 #        name: Run unittests inside Docker
 #        run: |
 #          docker run --rm harasani/fastlab:ci pytest tests/ -v
@@ -44,7 +43,7 @@ jobs:
 #
 #  deploy:
 #    needs: build-and-test
-#    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/github-v')
+#    if:github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/github-v')
 #    runs-on: ubuntu-latest
 #    env:
 #      RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
