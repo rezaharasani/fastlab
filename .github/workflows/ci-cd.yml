@@ -23,16 +23,16 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ vars.REGISTRY_IMAGE }}:ci
           load: true
+          tags: harasani/fastlab:ci
       -
         name: Run unittests inside Docker
         run: |
-          docker run --rm ${{ vars.REGISTRY_IMAG }}:ci pytest tests/ -v
+          docker run --rm harasani/fastlab:ci pytest tests/ -v
       -
         name: Lint with flake8
         run: |
-          docker run --rm ${{ vars.REGISTRY_IMAG }}:ci flake8 app tests
+          docker run --rm harasani/fastlab:ci flake8 app tests
 
   deploy:
     needs: build-and-test
