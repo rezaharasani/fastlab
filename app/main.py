@@ -2,6 +2,9 @@ from fastapi import FastAPI, status
 
 app = FastAPI()
 
+VAR1 = "Just for test"
+VAR2 = 1504
+
 
 @app.get("/", status_code=status.HTTP_200_OK)
 async def root():
