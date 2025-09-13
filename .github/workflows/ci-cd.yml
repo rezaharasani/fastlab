@@ -75,7 +75,7 @@ jobs:
 
   deploy:
     needs: [build, test]
-    if: github.ref_type == 'tag' && github.ref_name =~ ^github-v
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/github-v')
     runs-on: ubuntu-latest
     env:
       RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
