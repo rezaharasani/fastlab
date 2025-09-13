@@ -34,14 +34,14 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY_IMAGE }}:github-latest
-            ${{ env.REGISTRY_IMAGE }}:github-${{ github.sha.substring(0,7) }}
+            ${{ env.REGISTRY_IMAGE }}:github-${{ substring(github.sha, 0, 7) }}
 
 
   test:
     runs-on: ubuntu-latest
     needs: build
     container:
-      image: ${{ env.REGISTRY_IMAGE }}:github-${{ github.sha.substring(0,7) }}
+      image: ${{ env.REGISTRY_IMAGE }}:github-${{ substring(github.sha, 0, 7) }}
     steps:
       -
         name: Checkout code
